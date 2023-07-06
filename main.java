@@ -5,10 +5,19 @@ class patient {
     static int patientId = 0;
     private String firstName;
     private String lastName;
+    // private String password;
     private String password;
     private int id;// unique id to track each patient
     private int assignedDoctorId;
-    // private String password;
+    private String appTime;
+
+    public void setAppTime(String time) {
+        this.appTime = time;
+    }
+
+    public String getAppTime() {
+        return this.appTime;
+    }
 
     public void SetName(String firstName, String lastName) {
         this.firstName = firstName;
@@ -52,12 +61,36 @@ class doctor {
     private int id;// unique id for each doctor
     static int doctorId = 0;
     private ArrayList<patient> patientList = new ArrayList<>();
+    private Queue<Integer> freeTimeSlot = new LinkedList<>();
+
+    public doctor() {
+        this.id = doctorId;
+        doctorId++;
+        freeTimeSlot.add(0);
+        freeTimeSlot.add(1);
+        freeTimeSlot.add(2);
+        freeTimeSlot.add(3);
+        freeTimeSlot.add(4);
+        freeTimeSlot.add(5);
+        freeTimeSlot.add(6);
+        freeTimeSlot.add(7);
+        freeTimeSlot.add(8);
+        freeTimeSlot.add(9);
+        freeTimeSlot.add(10);
+        freeTimeSlot.add(11);
+        freeTimeSlot.add(12);
+        freeTimeSlot.add(13);
+        freeTimeSlot.add(14);
+        freeTimeSlot.add(15);
+    }
+
+    public Queue<Integer> getFreeSlots() {
+        return this.freeTimeSlot;
+    }
 
     public void setName(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.id = doctorId;
-        doctorId++;
     }
 
     public void setPassword(String pass) {
@@ -94,7 +127,7 @@ class doctor {
     }
 }
 
-public class MediConnectPlus {
+public class main {
 
     static ArrayList<patient> patientList = new ArrayList<>();
     static ArrayList<doctor> doctorList = new ArrayList<>();
@@ -131,6 +164,7 @@ public class MediConnectPlus {
         System.out.println("User Id : P" + p.getId());
         System.out.println("Assigned Doctor's Id : D" + p.getDoctorId());
         System.out.println("Assigned Doctor's Name : " + doctorList.get(p.getDoctorId()).getName());
+        System.out.println("Appoinment Timing : " + p.getAppTime());
         System.out.println();
     }
 
@@ -147,7 +181,7 @@ public class MediConnectPlus {
         } else {
             for (patient patient : patientList) {
                 System.out.println("Serial number: " + i + ", Patient Name: " + patient.getName() + ", Patient Id: P"
-                        + patient.getId());
+                        + patient.getId() + ", Appoinment Timing : " + patient.getAppTime());
                 i++;
             }
         }
@@ -167,6 +201,25 @@ public class MediConnectPlus {
         doctorList.add(d1);
         doctorList.add(d2);
         doctorList.add(d3);
+
+        HashMap<Integer, String> time = new HashMap<>();
+        time.put(0, "8:00AM - 8:30AM");
+        time.put(1, "8:30AM - 9:00AM");
+        time.put(2, "9:00AM - 9:30AM");
+        time.put(3, "9:30AM - 10:00AM");
+        time.put(4, "10:00AM - 10:30AM");
+        time.put(5, "10:30AM - 11:00AM");
+        time.put(6, "11:00AM - 11:30AM");
+        time.put(7, "11:30AM - 12:00AM");
+        time.put(8, "12:00AM - 12:30AM");
+        time.put(9, "12:30AM - 1:00AM");
+
+        time.put(10, "2:00AM - 2:30AM");
+        time.put(11, "2:30AM - 3:00AM");
+        time.put(12, "3:00AM - 3:30AM");
+        time.put(13, "3:30AM - 4:00AM");
+        time.put(14, "4:00AM - 4:30AM");
+        time.put(15, "4:30AM - 5:00AM");
 
         Scanner in = new Scanner(System.in);
         while (true) {
@@ -188,7 +241,10 @@ public class MediConnectPlus {
                     p.setPassword(pass);
                     int doctorId = assignDoctor();
                     p.assigndDoctor(doctorId);
-                    doctorList.get(doctorId).addPatient(p);
+                    doctor d = doctorList.get(doctorId);
+                    d.addPatient(p);
+                    Queue freeSlots = d.getFreeSlots();
+                    p.setAppTime(time.get(freeSlots.remove()));
                     System.out.println();
                     System.out.println();
                     System.out.println("Regestered");
@@ -202,7 +258,7 @@ public class MediConnectPlus {
                     lastName = in.next();
                     System.out.print("Create password: ");
                     pass = in.next();
-                    doctor d = new doctor();
+                    d = new doctor();
                     doctorList.add(d);
                     d.setName(firstName, lastName);
                     d.setPassword(pass);
